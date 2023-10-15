@@ -16,6 +16,8 @@ export async function AddTextMessageService(msg:any){
     return await message.save()
     
 } 
+
+
 export async function CreateRoomService(members:Array<String>,admin:String,roomName:String){
     console.log("CreateRoomService",members)
     const users:Array<mongoose.Types.ObjectId> = []
@@ -26,7 +28,34 @@ export async function CreateRoomService(members:Array<String>,admin:String,roomN
     const room = new Room({
         members: users,
         admin:new mongoose.Types.ObjectId(`${admin}`),
-        roomName:roomName
+        roomName:roomName,
+        roomType:(users.length==2)?"Personal":"Group"
     })
     await room.save()
 }
+
+export async function GetMessages(userId:String,friendId:String){
+    return await Message.aggregate([
+        { 
+            $match:{
+                $or:[
+                    { $and:[
+                        {from:friendId},
+                        {to:userId}]
+                    },
+                    { $and:[
+                        {from:userId},
+                        {to:friendId}]
+                    }
+                ]
+            }
+        }
+    ])
+}
+
+
+export async function GetChatsService(userId:String){
+    return await Room.find({members:{$in:[userId]}})
+}
+
+
