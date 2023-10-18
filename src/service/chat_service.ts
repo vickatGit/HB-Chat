@@ -7,7 +7,7 @@ export async function AddTextMessageService(msg:any){
     
     const message = new Message({
         from:msg.from,
-        to:msg.to,
+        toRoom:msg.toRoom,
         msgType:msg.msgType,
         msg:msg.msg,
         mediaUrl:msg.mediaUrl
@@ -31,26 +31,11 @@ export async function CreateRoomService(members:Array<String>,admin:String,roomN
         roomName:roomName,
         roomType:(users.length==2)?"Personal":"Group"
     })
-    await room.save()
+    return await room.save()
 }
 
-export async function GetMessages(userId:String,friendId:String){
-    return await Message.aggregate([
-        { 
-            $match:{
-                $or:[
-                    { $and:[
-                        {from:friendId},
-                        {to:userId}]
-                    },
-                    { $and:[
-                        {from:userId},
-                        {to:friendId}]
-                    }
-                ]
-            }
-        }
-    ])
+export async function GetMessages(roomId:String){
+    return await Message.find({toRoom:roomId})
 }
 
 
