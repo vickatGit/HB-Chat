@@ -72,7 +72,7 @@ app.get("/", (req, res) => {
 //   await Room.deleteMany({})
 // }
 server.listen(process.env.PORT, async() => {
-  console.log("listening on port : 8085");
+  console.log(`listening on port : ${process.env.PORT}`);
   // await deleteRooms()
   
 });
