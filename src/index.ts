@@ -66,7 +66,7 @@ io.on("connection", (socket) => {
 app.use(express.static(path.resolve("D:/VS code/chat/public")));
 
 app.get("/", (req, res) => {
-  return res.sendFile("D:/VS code/chat/public/index.html");
+  return res.sendFile("hi");
 });
 // const deleteRooms =async () => {
 //   await Room.deleteMany({})
