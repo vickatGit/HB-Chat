@@ -4,13 +4,14 @@ const path = require("path");
 import { Server } from "socket.io";
 import http from "http";
 import Room from './models/Room'
+import {config} from 'dotenv'
+config()
 dbConnect();
 const app: express.Application = express();
 app.use(express.json());
 const server = http.createServer(app);
 const io = new Server(server);
-import chatRoutes from './routes/ChatRoutes'
-import { Socket } from "dgram";
+import chatRoutes from './routes/ChatRoutes';
 
 const { 
     AddMessageController,
@@ -31,7 +32,6 @@ io.on("connection", (socket) => {
   });
 
   socket.on('JOIN_ROOM',(roomId) => { 
-    console.log("room joined")
     socket.join(roomId) 
   })
   socket.on("SEND_MESSAGE", async(from,msg,msgType,mediaUrl,roomId) => {
@@ -57,8 +57,7 @@ io.on("connection", (socket) => {
       socket.to(roomId).emit("AM_I_ONLINE")
     })
     socket.on("AM_I_ONLINE",(roomId,isOnline) => {
-      console.log()
-      socket.to(roomId).emit("IS_FRIEND_ONLINE",isOnline)
+      socket.to(roomId).emit("IS_FRIEND_ONLINE", isOnline)
     })
 
   
@@ -72,7 +71,8 @@ app.get("/", (req, res) => {
 // const deleteRooms =async () => {
 //   await Room.deleteMany({})
 // }
-server.listen(8085, async() => {
+
+server.listen(process.env.PORT, async() => {
   console.log("listening on port : 8085");
   // await deleteRooms()
   
