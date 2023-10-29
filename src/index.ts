@@ -71,7 +71,6 @@ app.get("/", (req, res) => {
 // const deleteRooms =async () => {
 //   await Room.deleteMany({})
 // }
-
 server.listen(process.env.PORT, async() => {
   console.log("listening on port : 8085");
   // await deleteRooms()
