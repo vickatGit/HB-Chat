@@ -1,6 +1,6 @@
 import express from "express";
 import { dbConnect } from "./config/db_connection";
-const path = require("path");
+import path from "path"
 import { Server } from "socket.io";
 import http from "http";
 import Room from './models/Room'
@@ -13,10 +13,10 @@ const server = http.createServer(app);
 const io = new Server(server);
 import chatRoutes from './routes/ChatRoutes';
 
-const { 
+import { 
     AddMessageController,
     CreateRoomController
- } = require("./controller/ChatController");
+ } from "./controller/ChatController";
 
 app.use(express.json());
 app.use('/chat/',chatRoutes)

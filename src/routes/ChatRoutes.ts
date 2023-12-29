@@ -1,10 +1,10 @@
 import { Router } from "express";
-const { 
-    AddMessageController,
-    CreateRoomController,
+import { 
+    // AddMessageController,
+    // CreateRoomController,
     GetRoomsController,
     GetChatsController
- } = require("../controller/ChatController");
+ } from "../controller/ChatController"
 
 const router = Router()
 

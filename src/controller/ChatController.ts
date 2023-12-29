@@ -8,7 +8,7 @@ import {
 
 }  from '../service/chat_service'
 
-const AddMessageController =async (from:String,to:String,msgType:String,msg:String,mediaUrl:String) => {
+export const AddMessageController =async (from:String,to:String,msgType:String,msg:String,mediaUrl:String) => {
     const data:any = await AddTextMessageService({
         from:from,
         toRoom:to,
@@ -20,28 +20,21 @@ const AddMessageController =async (from:String,to:String,msgType:String,msg:Stri
 
 }
 
-const CreateRoomController = async (members:Array<String>,admin:String,roomName:String) => {
+export const CreateRoomController = async (members:Array<String>,admin:String,roomName:String) => {
     console.log("CreateRoomController",members.length)
     return await CreateRoomService(members,admin,roomName)
 }
-const GetRoomsController =async (req:Request,res:Response,next:NextFunction) => {
+export const GetRoomsController =async (req:Request,res:Response,next:NextFunction) => {
     console.log("userId",req.params.userId)
     const data = await GetChatsService(req.params.userId)
     res.status(200).send({
         data:data
     })
 }
-const GetChatsController = async (req:Request,res:Response,next:NextFunction) => {
+export const GetChatsController = async (req:Request,res:Response,next:NextFunction) => {
     const data = await GetMessages(req.params.roomId)
     res.status(200).send({
         data:data
     })
 }
 
-
-module.exports = {
-    AddMessageController,
-    CreateRoomController,
-    GetRoomsController,
-    GetChatsController
-}
