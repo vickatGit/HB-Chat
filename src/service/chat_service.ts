@@ -60,6 +60,7 @@ export async function GetChatsService(userId: string) {
   await Promise.all(
     rooms.map(async (room: any) => {
       let friendId: string = "";
+      const roomWithUrl = room
       room.members.forEach((member: string) => {
         if (userId != member) friendId = member;
       });
@@ -69,22 +70,19 @@ export async function GetChatsService(userId: string) {
           Key: `images/avatars/${friendId}.jpeg`,
         });
         const url = await getSignedUrl(s3Client, obj);
-        const roomWithUrl = room
         roomWithUrl.roomThumb = url
-        processRooms.push(roomWithUrl)
-        console.log("url", roomWithUrl);
-      }else processRooms.push(room)
+      }
       if (room.admin.length!= 0) {
         const obj = new GetObjectCommand({
           Bucket: "habit-builder-bucket",
           Key: `images/avatars/${room.admin}.jpeg`,
         });
         const url = await getSignedUrl(s3Client, obj);
-        const roomWithUrl = room
+
         roomWithUrl.adminImage = url
-        processRooms.push(roomWithUrl)
         console.log("url", roomWithUrl);
-      }else processRooms.push(room)
+      }
+        processRooms.push(roomWithUrl)
     })
   );
   return processRooms;
