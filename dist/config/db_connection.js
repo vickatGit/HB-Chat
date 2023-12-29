@@ -8,13 +8,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.dbConnect = void 0;
-const mongoose = require('mongoose');
-const dotenv = require('dotenv').config();
+const mongoose_1 = __importDefault(require("mongoose"));
+const dotenv_1 = require("dotenv");
+(0, dotenv_1.config)();
 const dbConnect = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const connection = yield mongoose.connect(process.env.DB_CONNECTION_URL);
+        const connection = yield mongoose_1.default.connect(process.env.DB_CONNECTION_URL || "");
         console.log('connection made to db successfully 🚀🚀');
         console.log(`db host ${connection.connection.host}`);
         console.log(`db name ${connection.connection.name}`);

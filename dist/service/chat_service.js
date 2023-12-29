@@ -56,7 +56,11 @@ function GetMessages(roomId) {
 exports.GetMessages = GetMessages;
 function GetChatsService(userId) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield Room_1.default.find({ members: { $in: [userId] } });
+        return yield Room_1.default.find({ members: { $in: [userId] } })
+            .populate({
+            path: 'members',
+            select: ["-password"]
+        });
     });
 }
 exports.GetChatsService = GetChatsService;
