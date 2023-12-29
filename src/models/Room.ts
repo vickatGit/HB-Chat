@@ -7,7 +7,8 @@ const Room : Schema = new mongoose.Schema({
     admin : { type:Schema.Types.ObjectId,ref: 'AuthModel' },
     roomName: {type:String, required:true},    
     roomType : {type:String, required:true},
-    roomThumb : {type:String, required:false}
+    roomThumb : {type:String, required:false},
+    adminImage : {type:String, required:false}
 })
 
 export default mongoose.model("Room",Room)
