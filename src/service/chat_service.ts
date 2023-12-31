@@ -53,7 +53,7 @@ export async function GetMessages(roomId: String) {
 }
 
 export async function GetChatsService(userId: string) {
-  console.log("getchats");
+  console.log("getchats",userId);
   Room.aggregate();
   const rooms = await Room.find({ members: { $in: [userId] } });
   const processRooms:any[] = [];
@@ -62,25 +62,28 @@ export async function GetChatsService(userId: string) {
       let friendId: string = "";
       const roomWithUrl = room
       room.members.forEach((member: string) => {
-        if (userId != member) friendId = member;
+        // console.log(`userId : ${userId} friendId : ${member}  = ${userId!=member}`)
+        if (userId != member) {
+          friendId = member;
+        }
       });
       if (friendId.length != 0) {
         const obj = new GetObjectCommand({
           Bucket: "habit-builder-bucket",
           Key: `images/avatars/${friendId}.jpeg`,
         });
+        const user:any = await AuthModel.findOne({_id:friendId})
         const url = await getSignedUrl(s3Client, obj);
         roomWithUrl.roomThumb = url
+        roomWithUrl.roomName = user.username
       }
-      if (room.admin.length!= 0) {
+      if (userId.length!= 0) {
         const obj = new GetObjectCommand({
           Bucket: "habit-builder-bucket",
-          Key: `images/avatars/${room.admin}.jpeg`,
+          Key: `images/avatars/${userId}.jpeg`,
         });
         const url = await getSignedUrl(s3Client, obj);
-
         roomWithUrl.adminImage = url
-        console.log("url", roomWithUrl);
       }
         processRooms.push(roomWithUrl)
     })
