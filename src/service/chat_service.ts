@@ -62,8 +62,9 @@ export async function GetChatsService(userId: string) {
       rooms.map(async (room: any) => {
         let friendId: string = "";
         const roomWithUrl = room
+        roomWithUrl.roomName=""
         room.members.forEach((member: string) => {
-          // console.log(`userId : ${userId} friendId : ${member}  = ${userId!=member}`)
+          console.log(`userId : ${userId} friendId : ${member}  = ${userId!=member}`)
           if (userId != member) {
             friendId = member;
           }
@@ -73,11 +74,12 @@ export async function GetChatsService(userId: string) {
             Bucket: "habit-builder-bucket",
             Key: `images/avatars/${friendId}.jpeg`,
           });
+          console.log("friendId ",friendId)
           const user:any = await AuthModel.findOne({_id:friendId})
           if(user){
-          const url = await getSignedUrl(s3Client, obj);
-          roomWithUrl.roomThumb = url
-          roomWithUrl.roomName = user.username
+            const url = await getSignedUrl(s3Client, obj);
+            roomWithUrl.roomThumb = url
+            roomWithUrl.roomName = user.username
           }
         }
         if (userId.length!= 0) {
