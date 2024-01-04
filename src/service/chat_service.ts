@@ -62,7 +62,7 @@ export async function GetChatsService(userId: string) {
       rooms.map(async (room: any) => {
         let friendId: string = "";
         const roomWithUrl = room
-        roomWithUrl.roomName=""
+        roomWithUrl.roomName="Habitude User"
         room.members.forEach((member: string) => {
           console.log(`userId : ${userId} friendId : ${member}  = ${userId!=member}`)
           if (userId != member) {
