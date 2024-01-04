@@ -53,40 +53,47 @@ export async function GetMessages(roomId: String) {
 }
 
 export async function GetChatsService(userId: string) {
-  console.log("getchats",userId);
-  Room.aggregate();
-  const rooms = await Room.find({ members: { $in: [userId] } });
   const processRooms:any[] = [];
-  await Promise.all(
-    rooms.map(async (room: any) => {
-      let friendId: string = "";
-      const roomWithUrl = room
-      room.members.forEach((member: string) => {
-        // console.log(`userId : ${userId} friendId : ${member}  = ${userId!=member}`)
-        if (userId != member) {
-          friendId = member;
+  try {
+    console.log("getchats",userId);
+    Room.aggregate();
+    const rooms = await Room.find({ members: { $in: [userId] } });
+    await Promise.all(
+      rooms.map(async (room: any) => {
+        let friendId: string = "";
+        const roomWithUrl = room
+        room.members.forEach((member: string) => {
+          // console.log(`userId : ${userId} friendId : ${member}  = ${userId!=member}`)
+          if (userId != member) {
+            friendId = member;
+          }
+        });
+        if (friendId.length != 0) {
+          const obj = new GetObjectCommand({
+            Bucket: "habit-builder-bucket",
+            Key: `images/avatars/${friendId}.jpeg`,
+          });
+          const user:any = await AuthModel.findOne({_id:friendId})
+          if(user){
+          const url = await getSignedUrl(s3Client, obj);
+          roomWithUrl.roomThumb = url
+          roomWithUrl.roomName = user.username
+          }
         }
-      });
-      if (friendId.length != 0) {
-        const obj = new GetObjectCommand({
-          Bucket: "habit-builder-bucket",
-          Key: `images/avatars/${friendId}.jpeg`,
-        });
-        const user:any = await AuthModel.findOne({_id:friendId})
-        const url = await getSignedUrl(s3Client, obj);
-        roomWithUrl.roomThumb = url
-        roomWithUrl.roomName = user.username
-      }
-      if (userId.length!= 0) {
-        const obj = new GetObjectCommand({
-          Bucket: "habit-builder-bucket",
-          Key: `images/avatars/${userId}.jpeg`,
-        });
-        const url = await getSignedUrl(s3Client, obj);
-        roomWithUrl.adminImage = url
-      }
-        processRooms.push(roomWithUrl)
-    })
-  );
+        if (userId.length!= 0) {
+          const obj = new GetObjectCommand({
+            Bucket: "habit-builder-bucket",
+            Key: `images/avatars/${userId}.jpeg`,
+          });
+          const url = await getSignedUrl(s3Client, obj);
+          roomWithUrl.adminImage = url
+        }
+          processRooms.push(roomWithUrl)
+      })
+    );
+  } catch (error) {
+    throw error
+  }
+
   return processRooms;
 }
